@@ -10,62 +10,63 @@
 #import <Dobby/Dobby.h>
 #include <netdb.h>
 #include <dns_sd.h>
+#import <objc/runtime.h>
+
+const char *hookHostname = "www.baidu.com";
+const unsigned char newIP[4] = {14, 215, 177, 39};//www.baidu.com
+//const unsigned char newIP[4] = {14, 18, 175, 154};//www.qq.com
+
+
+@interface AddrInfoReply : NSObject
+@property (nonatomic) DNSServiceGetAddrInfoReply callBack;
+@end
+
+@implementation AddrInfoReply
+@end
+
 
 static void my_callBack(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *hostname, const struct sockaddr *address, uint32_t ttl, void *context) {
-    // nslookup www.baidu.com
-    // 216.58.200.238 google.com
-    if (errorCode == kDNSServiceErr_NoError) {
-//        kDNSServiceFlagsMoreComing | kDNSServiceFlagsAdd
+    if (context) {
+        id con = (__bridge id)(context);
+        AddrInfoReply *reply = objc_getAssociatedObject(con, "AddrInfoReply");
+        if (reply.callBack) {
+            if (errorCode == kDNSServiceErr_NoError && address->sa_family == AF_INET) {
+                if (address->sa_data[2] != 0
+                    || address->sa_data[3] != 0
+                    || address->sa_data[4] != 0
+                    || address->sa_data[5] != 0) {
+                    struct sockaddr *newAddress = (struct sockaddr *)address;
+                    newAddress->sa_data[2] = newIP[0];
+                    newAddress->sa_data[3] = newIP[1];
+                    newAddress->sa_data[4] = newIP[2];
+                    newAddress->sa_data[5] = newIP[3];
+                    printf("my_callBack reset ip\n");
+                    ((DNSServiceGetAddrInfoReply)(reply.callBack))(sdRef, flags, interfaceIndex, errorCode, hostname, newAddress, ttl, context);
+                    return;
+                }
+            }
+            ((DNSServiceGetAddrInfoReply)(reply.callBack))(sdRef, flags, interfaceIndex, errorCode, hostname, address, ttl, context);
+        } else {
+            fprintf(stderr, "ERROR: my_callBack no callBack\n");
+        }
+    } else {
+        fprintf(stderr, "ERROR: my_callBack no context\n");
     }
-    if (address->sa_family == AF_INET) {
-        
-    }
-    NSLog(@"\nflags=%u interfaceIndex=%u errorCode=%d hostname=%s address=%d.%d.%d.%d ttl=%u", flags, interfaceIndex, errorCode, hostname, (unsigned char)address->sa_data[2], (unsigned char)address->sa_data[3], (unsigned char)address->sa_data[4], (unsigned char)address->sa_data[5], ttl);
 }
 
 DNSServiceErrorType (*origin_DNSServiceGetAddrInfo)(DNSServiceRef *sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceProtocol protocol, const char *hostname, DNSServiceGetAddrInfoReply callBack, void *context);
 
 DNSServiceErrorType (my_DNSServiceGetAddrInfo)(DNSServiceRef *sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceProtocol protocol, const char *hostname, DNSServiceGetAddrInfoReply callBack, void *context) {
-    DNSServiceErrorType result = origin_DNSServiceGetAddrInfo(sdRef, flags, interfaceIndex, protocol, hostname, my_callBack, context);
-    printf("hostname: %s\n", hostname);
-//    const char *baidu = "baidu.com";
-//    if (strcmp(hostname, baidu) == 0) {
-//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//            struct sockaddr address;
-//            memset(&address, 0, sizeof(address));
-//            address.sa_len = 0x10;
-//            address.sa_family = 0x02;
-//            address.sa_data[2] = (unsigned char)220;
-//            address.sa_data[3] = (unsigned char)181;
-//            address.sa_data[4] = (unsigned char)38;
-//            address.sa_data[5] = (unsigned char)148;
-//            callBack(*sdRef, flags, interfaceIndex, kDNSServiceErr_NoError, hostname, &address, 160, context);
-//        });
-//    }
-    
-    return result;
+    printf("DNSServiceGetAddrInfo hostname: %s\n", hostname);
+    if (strcmp(hostname, hookHostname) == 0 && context) {
+        id con = (__bridge id)(context);
+        AddrInfoReply *reply = [[AddrInfoReply alloc] init];
+        reply.callBack =  callBack;
+        objc_setAssociatedObject(con, "AddrInfoReply", reply, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        return origin_DNSServiceGetAddrInfo(sdRef, flags, interfaceIndex, protocol, hostname, my_callBack, context);
+    }
+    return origin_DNSServiceGetAddrInfo(sdRef, flags, interfaceIndex, protocol, hostname, callBack, context);
 }
-
-//int (*origin_getaddrinfo)(const char * __restrict hostname, const char * __restrict service, const struct addrinfo * __restrict hints, struct addrinfo ** __restrict result);
-//
-//int (my_getaddrinfo)(const char * __restrict hostname, const char * __restrict service, const struct addrinfo * __restrict hints, struct addrinfo ** __restrict result) {
-//    NSLog(@"*****hostname = %s %s", hostname, service);
-//    int error = origin_getaddrinfo(hostname, service, hints, result);
-//    struct addrinfo* res;
-//    if (error == 0 && (res = *result)) {
-//        char toHostname[200];
-//        error = getnameinfo(res->ai_addr, res->ai_addrlen, toHostname, 200, NULL, 0, 0);
-//        if (error != 0) {
-//            fprintf(stderr, "error in getnameinfo: %s\n", gai_strerror(error));
-//        }
-//        if (*toHostname != '\0') {
-//            printf("hostname: %s->%s\n", hostname, toHostname);
-//        }
-//    } else {
-//        fprintf(stderr, "error in getaddrinfo: %s\n", gai_strerror(error));
-//    }
-//    return error;
-//}
 
 @interface AppDelegate ()
 
@@ -75,24 +76,20 @@ DNSServiceErrorType (my_DNSServiceGetAddrInfo)(DNSServiceRef *sdRef, DNSServiceF
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
-//    DobbyHook((void *)getaddrinfo, (void *)my_getaddrinfo, (void **)&origin_getaddrinfo);
     DobbyHook((void *)DNSServiceGetAddrInfo, (void *)my_DNSServiceGetAddrInfo, (void **)&origin_DNSServiceGetAddrInfo);
 
-    NSString *urlString = [NSString stringWithFormat:@"https://google.com/?_t=%.0f", NSDate.timeIntervalSinceReferenceDate * 1000.0];
+    NSString *urlString = [NSString stringWithFormat:@"https://%s/?_t=%.0f", hookHostname, NSDate.timeIntervalSinceReferenceDate * 1000.0];
     [[NSURLSession.sharedSession dataTaskWithURL:[NSURL URLWithString:urlString] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             NSLog(@"ERROR:%@", error);
         } else if (data) {
             NSString *body = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"body:%@", body);
+            NSLog(@"BODY:\n%@", body);
         } else {
             NSLog(@"NO DATA");
         }
     }] resume];
     
-    
-    // Override point for customization after application launch.
     return YES;
 }
 
