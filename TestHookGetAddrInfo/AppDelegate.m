@@ -13,46 +13,35 @@
 
 static void my_callBack(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *hostname, const struct sockaddr *address, uint32_t ttl, void *context) {
     // nslookup www.baidu.com
+    // 216.58.200.238 google.com
     if (errorCode == kDNSServiceErr_NoError) {
 //        kDNSServiceFlagsMoreComing | kDNSServiceFlagsAdd
     }
+    if (address->sa_family == AF_INET) {
+        
+    }
     NSLog(@"\nflags=%u interfaceIndex=%u errorCode=%d hostname=%s address=%d.%d.%d.%d ttl=%u", flags, interfaceIndex, errorCode, hostname, (unsigned char)address->sa_data[2], (unsigned char)address->sa_data[3], (unsigned char)address->sa_data[4], (unsigned char)address->sa_data[5], ttl);
 }
-DNSServiceErrorType (*origin_DNSServiceGetAddrInfo)(
-    DNSServiceRef                    *sdRef,
-    DNSServiceFlags flags,
-    uint32_t interfaceIndex,
-    DNSServiceProtocol protocol,
-    const char                       *hostname,
-    DNSServiceGetAddrInfoReply callBack,
-    void                             *context          /* may be NULL */
-);
-DNSServiceErrorType (my_DNSServiceGetAddrInfo)(
-    DNSServiceRef                    *sdRef,
-    DNSServiceFlags flags,
-    uint32_t interfaceIndex,
-    DNSServiceProtocol protocol,
-    const char                       *hostname,
-    DNSServiceGetAddrInfoReply callBack,
-    void                             *context          /* may be NULL */
- ) {
+
+DNSServiceErrorType (*origin_DNSServiceGetAddrInfo)(DNSServiceRef *sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceProtocol protocol, const char *hostname, DNSServiceGetAddrInfoReply callBack, void *context);
+
+DNSServiceErrorType (my_DNSServiceGetAddrInfo)(DNSServiceRef *sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceProtocol protocol, const char *hostname, DNSServiceGetAddrInfoReply callBack, void *context) {
     DNSServiceErrorType result = origin_DNSServiceGetAddrInfo(sdRef, flags, interfaceIndex, protocol, hostname, my_callBack, context);
     printf("hostname: %s\n", hostname);
-    
-    const char *baidu = "baidu.com";
-    if (strcmp(hostname, baidu) == 0) {
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            struct sockaddr address;
-            memset(&address, 0, sizeof(address));
-            address.sa_len = 0x10;
-            address.sa_family = 0x02;
-            address.sa_data[2] = (unsigned char)220;
-            address.sa_data[3] = (unsigned char)181;
-            address.sa_data[4] = (unsigned char)38;
-            address.sa_data[5] = (unsigned char)148;
-            callBack(*sdRef, flags, interfaceIndex, kDNSServiceErr_NoError, hostname, &address, 160, context);
-        });
-    }
+//    const char *baidu = "baidu.com";
+//    if (strcmp(hostname, baidu) == 0) {
+//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//            struct sockaddr address;
+//            memset(&address, 0, sizeof(address));
+//            address.sa_len = 0x10;
+//            address.sa_family = 0x02;
+//            address.sa_data[2] = (unsigned char)220;
+//            address.sa_data[3] = (unsigned char)181;
+//            address.sa_data[4] = (unsigned char)38;
+//            address.sa_data[5] = (unsigned char)148;
+//            callBack(*sdRef, flags, interfaceIndex, kDNSServiceErr_NoError, hostname, &address, 160, context);
+//        });
+//    }
     
     return result;
 }
@@ -90,7 +79,7 @@ DNSServiceErrorType (my_DNSServiceGetAddrInfo)(
 //    DobbyHook((void *)getaddrinfo, (void *)my_getaddrinfo, (void **)&origin_getaddrinfo);
     DobbyHook((void *)DNSServiceGetAddrInfo, (void *)my_DNSServiceGetAddrInfo, (void **)&origin_DNSServiceGetAddrInfo);
 
-    NSString *urlString = [NSString stringWithFormat:@"https://baidu.com/?_t=%.0f", NSDate.timeIntervalSinceReferenceDate * 1000.0];
+    NSString *urlString = [NSString stringWithFormat:@"https://google.com/?_t=%.0f", NSDate.timeIntervalSinceReferenceDate * 1000.0];
     [[NSURLSession.sharedSession dataTaskWithURL:[NSURL URLWithString:urlString] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             NSLog(@"ERROR:%@", error);
