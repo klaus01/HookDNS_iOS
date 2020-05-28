@@ -32,7 +32,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		24AA6C1F247D47D50086E8C0 /* TestHookGetAddrInfo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestHookGetAddrInfo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		24AA6C1F247D47D50086E8C0 /* HookGetAddrInfo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HookGetAddrInfo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24AA6C22247D47D50086E8C0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		24AA6C23247D47D50086E8C0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		24AA6C28247D47D50086E8C0 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -42,7 +42,7 @@
 		24AA6C31247D47D70086E8C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		24AA6C33247D47D70086E8C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24AA6C34247D47D70086E8C0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		24AA6C43247D4B0D0086E8C0 /* Dobby.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Dobby.framework; path = TestHookGetAddrInfo/Dobby.framework; sourceTree = "<group>"; };
+		24AA6C43247D4B0D0086E8C0 /* Dobby.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Dobby.framework; path = HookGetAddrInfo/Dobby.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +60,7 @@
 		24AA6C16247D47D50086E8C0 = {
 			isa = PBXGroup;
 			children = (
-				24AA6C21247D47D50086E8C0 /* TestHookGetAddrInfo */,
+				24AA6C21247D47D50086E8C0 /* HookGetAddrInfo */,
 				24AA6C20247D47D50086E8C0 /* Products */,
 				24AA6C42247D4B0D0086E8C0 /* Frameworks */,
 			);
@@ -69,12 +69,12 @@
 		24AA6C20247D47D50086E8C0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				24AA6C1F247D47D50086E8C0 /* TestHookGetAddrInfo.app */,
+				24AA6C1F247D47D50086E8C0 /* HookGetAddrInfo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		24AA6C21247D47D50086E8C0 /* TestHookGetAddrInfo */ = {
+		24AA6C21247D47D50086E8C0 /* HookGetAddrInfo */ = {
 			isa = PBXGroup;
 			children = (
 				24AA6C22247D47D50086E8C0 /* AppDelegate.h */,
@@ -87,7 +87,7 @@
 				24AA6C33247D47D70086E8C0 /* Info.plist */,
 				24AA6C34247D47D70086E8C0 /* main.m */,
 			);
-			path = TestHookGetAddrInfo;
+			path = HookGetAddrInfo;
 			sourceTree = "<group>";
 		};
 		24AA6C42247D4B0D0086E8C0 /* Frameworks */ = {
@@ -101,9 +101,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		24AA6C1E247D47D50086E8C0 /* TestHookGetAddrInfo */ = {
+		24AA6C1E247D47D50086E8C0 /* HookGetAddrInfo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 24AA6C38247D47D70086E8C0 /* Build configuration list for PBXNativeTarget "TestHookGetAddrInfo" */;
+			buildConfigurationList = 24AA6C38247D47D70086E8C0 /* Build configuration list for PBXNativeTarget "HookGetAddrInfo" */;
 			buildPhases = (
 				24AA6C1B247D47D50086E8C0 /* Sources */,
 				24AA6C1C247D47D50086E8C0 /* Frameworks */,
@@ -114,9 +114,9 @@
 			);
 			dependencies = (
 			);
-			name = TestHookGetAddrInfo;
-			productName = TestHookGetAddrInfo;
-			productReference = 24AA6C1F247D47D50086E8C0 /* TestHookGetAddrInfo.app */;
+			name = HookGetAddrInfo;
+			productName = HookGetAddrInfo;
+			productReference = 24AA6C1F247D47D50086E8C0 /* HookGetAddrInfo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -133,7 +133,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 24AA6C1A247D47D50086E8C0 /* Build configuration list for PBXProject "TestHookGetAddrInfo" */;
+			buildConfigurationList = 24AA6C1A247D47D50086E8C0 /* Build configuration list for PBXProject "HookGetAddrInfo" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -146,7 +146,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				24AA6C1E247D47D50086E8C0 /* TestHookGetAddrInfo */,
+				24AA6C1E247D47D50086E8C0 /* HookGetAddrInfo */,
 			);
 		};
 /* End PBXProject section */
@@ -315,14 +315,14 @@
 				DEVELOPMENT_TEAM = EZA33EQAV3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/TestHookGetAddrInfo",
+					"$(PROJECT_DIR)/HookGetAddrInfo",
 				);
-				INFOPLIST_FILE = TestHookGetAddrInfo/Info.plist;
+				INFOPLIST_FILE = HookGetAddrInfo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.kelei.TestHookGetAddrInfo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kelei.HookGetAddrInfo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -336,14 +336,14 @@
 				DEVELOPMENT_TEAM = EZA33EQAV3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/TestHookGetAddrInfo",
+					"$(PROJECT_DIR)/HookGetAddrInfo",
 				);
-				INFOPLIST_FILE = TestHookGetAddrInfo/Info.plist;
+				INFOPLIST_FILE = HookGetAddrInfo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.kelei.TestHookGetAddrInfo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kelei.HookGetAddrInfo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -352,7 +352,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		24AA6C1A247D47D50086E8C0 /* Build configuration list for PBXProject "TestHookGetAddrInfo" */ = {
+		24AA6C1A247D47D50086E8C0 /* Build configuration list for PBXProject "HookGetAddrInfo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				24AA6C36247D47D70086E8C0 /* Debug */,
@@ -361,7 +361,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		24AA6C38247D47D70086E8C0 /* Build configuration list for PBXNativeTarget "TestHookGetAddrInfo" */ = {
+		24AA6C38247D47D70086E8C0 /* Build configuration list for PBXNativeTarget "HookGetAddrInfo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				24AA6C39247D47D70086E8C0 /* Debug */,
